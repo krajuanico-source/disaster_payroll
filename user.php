@@ -10,10 +10,21 @@ error_reporting(0);
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
 	
-	$sql_bene_cor = "SELECT payroll_no FROM lib_users WHERE empid = '" . $emm . "'";
-	$result_bene_cor = $conn->query($sql_bene_cor);
-	if ($payrollNoRow = $result_bene_cor->fetch_assoc()) 
-		$payrollNo =  $payrollNoRow['payroll_no'];
+	$sql_user = "SELECT empname, user_type, payroll_no 
+             FROM lib_users 
+             WHERE empid = '$emm'";
+
+        $result_user = $conn->query($sql_user);
+
+        if ($result_user && $row = $result_user->fetch_assoc()) {
+            $empname   = $row['empname'];
+            $user_type = $row['user_type'];
+            $payrollNo = $row['payroll_no'];
+        } else {
+            $empname   = 'GUEST';
+            $user_type = '';
+            $payrollNo = '';
+        }
 	
 	
 ?>
@@ -236,7 +247,9 @@ error_reporting(0);
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $emm; ?> </a>
+                    <a class="navbar-brand" href="#">
+						<?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?=  strtoupper(htmlspecialchars($user_type ?? '')) ?>
+					</a>
                 </div>
                 <div class="collapse navbar-collapse">
                      <ul class="nav navbar-nav navbar-right">

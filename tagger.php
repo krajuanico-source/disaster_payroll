@@ -10,11 +10,12 @@ error_reporting(0);
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
 
-	$sql2 = "SELECT team_leader,payroll_no from lib_users where empid='$emm'";
+	$sql2 = "SELECT team_leader, payroll_no, empname FROM lib_users WHERE empid='$emm'";
 	$result2 = $conn->query($sql2);
 	$row2 = $result2->fetch_assoc();
 	$team_leader=$row2['team_leader'];
 	$payroll_no=$row2['payroll_no'];
+	$empname   = $row2['empname'];
 	
 // SQL query to fetch payroll list from the database
 $sql = "SELECT * FROM ect_clean_list WHERE status IN ('Validated') and payroll_no='$payroll_no' order by status desc";  // Adjust the table name to your actual payroll table
@@ -246,7 +247,9 @@ $result = $conn->query($sql);
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $emm; ?> </a>
+                    <a class="navbar-brand" href="#">
+						<?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?=  strtoupper(htmlspecialchars($user_type ?? '')) ?>
+					</a>
                 </div>
                 <div class="collapse navbar-collapse">
                      <ul class="nav navbar-nav navbar-right">

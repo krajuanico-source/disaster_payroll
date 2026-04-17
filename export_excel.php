@@ -9,10 +9,11 @@ error_reporting(0);
 	if($emm==''||$emm==NULL){
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
-	$sql1= "select user_type from lib_users where empid='$emm'";
+	$sql1 = "SELECT user_type, empname FROM lib_users WHERE empid='$emm'";
 	$result1 = $conn->query($sql1);
 	$row1 = $result1->fetch_assoc();
 	$user_type=$row1['user_type'];
+	$empname   = $row1['empname'];
 	
 ?>
 <html lang="en">
@@ -157,7 +158,9 @@ error_reporting(0);
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $emm; ?> </a>
+                    <a class="navbar-brand" href="#">
+						<?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?=  strtoupper(htmlspecialchars($user_type ?? '')) ?>
+					</a>
                 </div>
                 <div class="collapse navbar-collapse">
                      <ul class="nav navbar-nav navbar-right">

@@ -9,6 +9,12 @@ error_reporting(0);
 	if($emm==''||$emm==NULL){
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
+	$sql2 = "SELECT team_leader, payroll_no, empname FROM lib_users WHERE empid='$emm'";
+	$result2 = $conn->query($sql2);
+	$row2 = $result2->fetch_assoc();
+	$team_leader=$row2['team_leader'];
+	$payroll_no=$row2['payroll_no'];
+	$empname     = $row2['empname'];
 	
 ?>
 
@@ -241,7 +247,9 @@ error_reporting(0);
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><?php echo $emm; ?> </a>
+                    <a class="navbar-brand" href="#">
+						<?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?=  strtoupper(htmlspecialchars($user_type ?? '')) ?>
+					</a>
                 </div>
                 <div class="collapse navbar-collapse">
                      <ul class="nav navbar-nav navbar-right">
