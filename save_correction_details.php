@@ -1,5 +1,5 @@
 <?php
-include "dbconnect.php";  // Database connection
+include "dbconnect.php"; 
 $conn->set_charset("utf8mb4");
 $conn->query("SET NAMES 'utf8mb4'");
 
@@ -47,7 +47,7 @@ $sql = "INSERT INTO tbl_correction_details
              '$sex', '$gcash', '$pcn')";
 $result = $conn->query($sql);
 
-$sqlq = "UPDATE ect_clean_list SET status='Correction', validated_by='$user_id' WHERE id='$beneId'";
+$sqlq = "UPDATE ect_clean_list SET status='Correction', validated_by='$user_id'  WHERE id='$beneId'";
 $resultq = $conn->query($sqlq);
 
 if ($result) {

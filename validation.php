@@ -333,16 +333,26 @@ $(document).ready(function() {
         }
     },
     pageLength: 10,
-    columns: [
-        { title: "No." },
-        { title: "Beneficiary Name" },
-        { title: "DOB" },
-        { title: "Barangay" },
-        { title: "Amount" },
-        { title: "Status" },
-        { title: "Updated By" },
-        { title: "Actions" }
-    ]
+columns: [
+    { title: "No." },
+    { 
+        title: "Beneficiary Name",
+        render: function(data, type, row) {
+            if (type === 'display') {
+                return data.replace(/\b(JR|SR|I|II|III|IV|V)\s*$/i, function(match) {
+                    return match.trim().toUpperCase() + '.';
+                });
+            }
+            return data; // raw data unchanged for sort/filter/save
+        }
+    },
+    { title: "DOB" },
+    { title: "Barangay" },
+    { title: "Amount" },
+    { title: "Status" },
+    { title: "Updated By" },
+    { title: "Actions" }
+]
 });
 
 

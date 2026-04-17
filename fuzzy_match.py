@@ -173,7 +173,7 @@ db_df[cols_to_convert] = db_df[cols_to_convert].astype(int)
 db_df[cols_to_convert] = db_df[cols_to_convert].astype(str).map(lambda x: x.zfill(2))
 db_df['Birthday'] = db_df['birth_day'] + ' ' + db_df['birth_month'] + ' ' + db_df['birth_year']
 
-# columns_to_retain = ["FIRST NAME", "MIDDLE NAME", "LAST NAME", "EXTENSION NAME", "BIRTH DAY", "BIRTH MONTH", "BIRTH YEAR", "PROVINCE", "CITY/MUNICIPALITY", "BARANGAY", "PUROK", "AMOUNT"]
+# columns_to_retain = ["FIRST NAME", "MIDDLE NAME", "LAST NAME", "EXTENSION NAME", "BIRTH DAY", "BIRTH MONTH", "BIRTH YEAR", "SEX", "GCASH", "PCN", "PROVINCE", "CITY/MUNICIPALITY", "BARANGAY", "PUROK", "AMOUNT"]
 
 master_list = pd.DataFrame()
 valid_recs = pd.DataFrame()
@@ -194,6 +194,9 @@ column_mapping = {
     'BARANGAY': 'barangay',
     'PUROK': 'purok',
     'AMOUNT': 'amount',
+    'SEX': 'sex',
+    'GCASH': 'gcash',
+    'PCN': 'pcn',
     'File Source': 'file_source'
     # Add more mappings as needed
 }
@@ -338,7 +341,8 @@ df = df.astype(str)
 #         raise ValueError(f"Column '{'CONTROL NUMBER'}' contains null values. Please ensure all rows have values.")
 
 required_columns = ['FIRST NAME', 'MIDDLE NAME', 'LAST NAME', 'EXTENSION NAME',
-                    'BIRTH DAY', 'BIRTH MONTH', 'BIRTH YEAR', 'PROVINCE', 'CITY/MUNICIPALITY', 
+                    'BIRTH DAY', 'BIRTH MONTH', 'BIRTH YEAR', 'SEX', 'GCASH', 'PCN',
+                    'PROVINCE', 'CITY/MUNICIPALITY', 
                     'BARANGAY', 'PUROK', 'AMOUNT']
 
 missing = [col for col in required_columns if col not in df.columns]

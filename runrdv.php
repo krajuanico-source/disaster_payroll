@@ -16,14 +16,33 @@ if ($result->num_rows > 0) {
     // ✅ UTF-8 BOM for Excel
     $output .= "\xEF\xBB\xBF";
 
-    $output .= 'S/N,LAST NAME,FIRST NAME,MIDDLE NAME,EXTENSION NAME,BIRTH DAY,BIRTH MONTH,BIRTH YEAR,PROVINCE,CITY/MUNICIPALITY,BARANGAY,PUROK,AMOUNT,PAYROLL NO,TEAM LEADER' . "\n";
+$output .= 'S/N,LAST NAME,FIRST NAME,MIDDLE NAME,EXTENSION NAME,BIRTH DAY,BIRTH MONTH,BIRTH YEAR,SEX,GCASH,PCN,PROVINCE,CITY/MUNICIPALITY,BARANGAY,PUROK,AMOUNT,PAYROLL NO,TEAM LEADER' . "\n";
 
     while ($row = $result->fetch_assoc()) {
         // ✅ Replace commas in data values to avoid breaking CSV
         $clean = function ($val) {
             return str_replace([",", "\n", "\r"], [" ", " ", " "], $val ?? '');
         };
-        $output .= $row['bene_id'] . ',' . $row['new_lname'] . ',' . $row['new_fname'] . ',' . $row['new_mname'] . ',' . $row['new_ename'] . ',' . $row['birthday'] . ',' . $row['birthmonth'] . ',' . $row['birthyear'] . ',' . $row['province'] . ',' . $row['city'] . ',' . $row['barangay'] . ',' . $row['purok'] .  ',' . $row['amount'] .  ',' .$row['payroll_no'] .  ',' . $row['team_leader'] . "\n";
+        $output .=
+        $row['bene_id'] . ',' .
+        $row['new_lname'] . ',' .
+        $row['new_fname'] . ',' .
+        $row['new_mname'] . ',' .
+        $row['new_ename'] . ',' .
+        $row['birthday'] . ',' .
+        $row['birthmonth'] . ',' .
+        $row['birthyear'] . ',' .
+        $row['sex'] . ',' .          
+        $row['gcash'] . ',' .    
+        $row['pcn'] . ',' .        
+        $row['province'] . ',' .
+        $row['city'] . ',' .
+        $row['barangay'] . ',' .
+        $row['purok'] . ',' .
+        $row['amount'] . ',' .
+        $row['payroll_no'] . ',' .
+        $row['team_leader'] . "\n";
+
 
         $payroll_no = $row['payroll_no'];
         $team_leader = $row['team_leader'];

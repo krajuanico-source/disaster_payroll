@@ -17,69 +17,102 @@ if (isset($_POST['bene_id'])) {
         echo "<form id='updateStatusForm'>";
         while ($bene = $result_bene->fetch_assoc()) {
 ?>
-            <div class="row">
+           <div class="row">
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>No:</label>
-                        <input type="text" class="form-control" name="no" value="<?php echo $bene['control_number']; ?>" disabled />
+                        <input type="text" class="form-control" name="no"
+                            value="<?php echo $bene['control_number']; ?>" disabled />
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>First Name:</label>
-                        <input type="text" class="form-control" name="fname" id="fname" 
+                        <input type="text" class="form-control" name="fname" id="fname"
                             value="<?php echo strtoupper($bene['first_name']); ?>" disabled />
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Middle Name:</label>
-                        <input type="text" class="form-control" name="mname" id="mname" 
+                        <input type="text" class="form-control" name="mname" id="mname"
                             value="<?php echo strtoupper($bene['middle_name']); ?>" disabled />
                     </div>
                 </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Last Name:</label>
-                            <input type="text" class="form-control" name="lname" id="lname" 
-                                value="<?php echo strtoupper(str_replace('Ã', 'Ñ', $bene['last_name'])); ?>" disabled />
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Ext. Name:</label>
-                            <input type="text" class="form-control" name="ename" id="ename" 
-                                value="<?php echo strtoupper($bene['extension_name']); ?>" disabled />
-                        </div>
-                    </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Sex</label>
+                        <label>Last Name:</label>
+                        <input type="text" class="form-control" name="lname" id="lname"
+                            value="<?php echo strtoupper(str_replace('Ã', 'Ñ', $bene['last_name'])); ?>" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Extension Name:</label>
+                        <input type="text" class="form-control" name="ename" id="ename"
+                            value="<?php echo strtoupper($bene['extension_name']); ?>" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Sex:</label>
                         <select id="sex" class="form-control" required>
-                            <option value="<?php echo $bene['bene_sex']; ?>"><?php echo strtoupper($bene['bene_sex']); ?></option>
+                            <option value="<?php echo $bene['sex']; ?>">
+                                <?php echo strtoupper($bene['sex']); ?>
+                            </option>
                             <option value="MALE">MALE</option>
                             <option value="FEMALE">FEMALE</option>
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Birth Date:</label>
-                        <input type="text" class="form-control" name="dob" id="dob" value="<?php echo $bene['birth_day']; ?>" disabled />
+                        <input type="text" class="form-control" name="dob" id="dob"
+                            value="<?php echo $bene['birth_day']; ?>" disabled />
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Birth Month:</label>
-                        <input type="text" class="form-control" name="dom" id="dom" value="<?php echo $bene['birth_month']; ?>" disabled />
+                        <input type="text" class="form-control" name="dom" id="dom"
+                            value="<?php echo $bene['birth_month']; ?>" disabled />
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Birth Year:</label>
-                        <input type="text" class="form-control" name="doy" id="doy" value="<?php echo $bene['birth_year']; ?>" disabled />
+                        <input type="text" class="form-control" name="doy" id="doy"
+                            value="<?php echo $bene['birth_year']; ?>" disabled />
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>GCash Number:</label>
+                        <input type="text" class="form-control" name="gcash" id="gcash"
+                            value="<?php echo htmlspecialchars($bene['gcash'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>PhilSys Card Number (PCN):</label>
+                        <input type="text" class="form-control" name="pcn" id="pcn"
+                            value="<?php echo htmlspecialchars($bene['pcn'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"disabled />
+                    </div>
+                </div>
+
+            </div>     
                 <?php if ($bene['status'] == 'Disqualified') { ?>
 
                     <div class="col-md-12">
@@ -163,8 +196,8 @@ if (isset($_POST['bene_id'])) {
                 <?php }
                 ?>
                 <div class="row" id="new_details" hidden>
-                    <br>&emsp;<label style="color:red">Add New Details</label><br>
-                   <div class="col-md-4">
+                    <br>&emsp;<label style="color:red">Update Beneficiary's Information</label><br>
+                    <div class="col-md-3">
                     <div class="form-group">
                             <label>First Name:</label>
                             <input type="text" class="form-control text-uppercase" name="new_fname" id="new_fname" required 
@@ -173,42 +206,90 @@ if (isset($_POST['bene_id'])) {
                                 value="<?php echo $bene['amount']; ?>" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Middle Name:</label>
                             <input type="text" class="form-control text-uppercase" name="new_mname" id="new_mname" 
                                 value="<?php echo str_replace(['Ã', 'Ã±', 'ÃÂ', 'Ã'], 'Ñ', $bene['middle_name']); ?>" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Last Name:</label>
                             <input type="text" class="form-control text-uppercase" name="new_lname" id="new_lname" required 
                                 value="<?php echo str_replace(['Ã', 'Ã±', 'ÃÂ', 'Ã'], 'Ñ', $bene['last_name']); ?>" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label>Birth Date:</label>
-                            <input type="number" class="form-control" name="new_dob" id="new_dob"
-                                value="<?php echo htmlspecialchars($bene['birth_day'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
-                        </div>
-                    </div>
+                            <label>Extension Name:</label>
+                            <select class="form-control text-uppercase" name="new_ename" id="new_ename" required>
+                                <option value="">-- Select Extension --</option>
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Birth Month:</label>
-                            <input type="number" class="form-control" name="new_dom" id="new_dom"
-                                value="<?php echo htmlspecialchars($bene['birth_month'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+                                <?php
+                                $extensions = ["JR", "SR", "I", "II", "III", "IV", "V"];
+
+                                foreach ($extensions as $ext) {
+                                    $selected = (strtoupper($bene['extension_name']) == $ext) ? "selected" : "";
+                                    echo "<option value='$ext' $selected>$ext</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Birth Month:</label>
+                                <input type="number" class="form-control" name="new_dom" id="new_dom"
+                                    min="1" max="12"
+                                    value="<?php echo htmlspecialchars($bene['birth_month'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Birth Date:</label>
+                                <input type="number" class="form-control" name="new_dob" id="new_dob"
+                                    min="1" max="31"
+                                    value="<?php echo htmlspecialchars($bene['birth_day'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+                            </div>
+                        </div>                    
+                        <div class="col-md-4">
                         <div class="form-group">
                             <label>Birth Year:</label>
                             <input type="number" class="form-control" name="new_doy" id="new_doy"
                                 value="<?php echo htmlspecialchars($bene['birth_year'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                                <label>Sex:</label>
+                                <select class="form-control text-uppercase" name="new_sex" id="new_sex" required>
+                                    <option value="">-- Select Sex --</option>
+                                    <?php
+                                    $sexOptions = ["MALE", "FEMALE"];
+                                    foreach ($sexOptions as $s) {
+                                        $selected = (strtoupper($bene['sex']) == $s) ? "selected" : "";
+                                        echo "<option value='$s' $selected>$s</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>GCash Number:</label>
+                                <input type="text" class="form-control" name="gcash" id="gcash" 
+                                    value="<?php echo htmlspecialchars($bene['gcash'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>PhilSys Card Number (PCN):</label>
+                                <input type="text" class="form-control" name="pcn" id="pcn" 
+                                    value="<?php echo htmlspecialchars($bene['pcn'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" />
+                            </div>
+                        </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Province</label>
@@ -436,6 +517,7 @@ if (isset($_POST['bene_id'])) {
             var newFname = $('#new_fname').val().trim();
             var newMname = $('#new_mname').val().trim(); // Optional
             var newLname = $('#new_lname').val().trim();
+            var newEname = $('#new_ename').val().trim();
             var newDob = $('#new_dob').val().trim();
             var newDom = $('#new_dom').val().trim();
             var newDoy = $('#new_doy').val().trim();
@@ -445,7 +527,11 @@ if (isset($_POST['bene_id'])) {
             var province = $('#province option:selected').text().trim();
             var citymuni = $('#citymuni option:selected').text().trim();
             var barangay = $('#barangay option:selected').text().trim();
-            var purok = $('#purok option:selected').text().trim();
+            var purok = $('#purok').val().trim();
+
+            var sex = $('#sex').val();
+            var gcash = $('#gcash').val();
+            var pcn = $('#pcn').val();
 
             // Validation: All fields except newMname must be filled
             if (
@@ -492,9 +578,13 @@ if (isset($_POST['bene_id'])) {
                     new_amount: newamount,
                     new_mname: newMname,
                     new_lname: newLname,
+                    new_ename: newEname,
                     new_dob: newDob,
                     new_dom: newDom,
                     new_doy: newDoy,
+                    sex: sex,
+                    gcash: gcash,
+                    pcn: pcn,
                     province: province,
                     citymuni: citymuni,
                     barangay: barangay,
