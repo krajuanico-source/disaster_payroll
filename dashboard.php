@@ -231,6 +231,9 @@ $disqualfied  = getCount($conn, $payroll_no, 'disqualfied');
 				<li>
 					<a href="validation.php?userid=<?php echo $emm;?>"><i class="pe-7s-folder"></i><span><b>Masterlist</span></b> </a>
 				</li>
+                <li class="">
+					<a href="served_list.php?userid=<?php echo $emm;?>"><i class="pe-7s-folder"></i><span><b>Served List</span></b> </a>
+				</li>		
 				<?php }
 				if($user_type=='Team Leader'||$user_type=='Tagger'){ ?>
 				<li>

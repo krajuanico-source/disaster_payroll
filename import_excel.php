@@ -9,24 +9,24 @@ include "dbconnect.php";  // Database connection
 $payroll_date    = $_POST['payroll_date'];
 $payroll_staff   = $_POST['payroll_staff'];
 $project_name    = $_POST['project_name'];
-$program_title   = $_POST['program_title'];
 $amount          = $_POST['amount'];
-$sdo_num         = $_POST['sdo'];
-$agency          = $_POST['fund_source'];
+$program_title = $_POST['program_title'] ?? '';
+$sdo_num       = $_POST['sdo'] ?? '';
+$agency        = $_POST['fund_source'] ?? '';
 $team_leader     = $_POST['team_leader'];
 $payrollNo		 = "";
 $payrollNumbersMap = [];
 $currentPayrollNumber = 1; // Start payroll number counter
 
 
-$payrollNoTl = "SELECT payroll_no FROM tbl_payroll_list WHERE team_leader='$team_leader' AND payroll_status IS NULL";
+$payrollNoTl = "SELECT payroll_no FROM tbl_payroll_list WHERE team_leader='$team_leader'  AND (payroll_status IS NULL OR payroll_status = 'Active')";
 $resultTl = $conn->query($payrollNoTl);
 
 if ($resultTl->num_rows > 0) {
     while ($rowTl = $resultTl->fetch_assoc()) {
 		$payrollNo=$rowTl['payroll_no'];
     }
-} else {
+} else {    
    $createPayroll = "SELECT MAX(payroll_no)+1 as payrollNo FROM tbl_payroll_list";
 	$resultPayroll = $conn->query($createPayroll);
 	$rowPayroll = $resultPayroll->fetch_assoc();
@@ -74,11 +74,32 @@ if (isset($_POST['submit'])) {
                 $dob = $conn->real_escape_string(htmlentities($data[5]));
                 $dom = $conn->real_escape_string(htmlentities($data[6]));
                 $doy = $conn->real_escape_string(htmlentities($data[7]));
-                $city = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[10]));
-                $province = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[11]));
-                $amount = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[12]));
-                $brgy = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[9]));
-                $purok = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[8]));
+                $sex = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[8]));
+                $gcash = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[9]));
+                $pcn = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[10]));
+                $purok = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[11]));
+                $brgy = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[12]));
+                $city = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[13]));
+                $province = $conn->real_escape_string(iconv('ISO-8859-1', 'UTF-8', $data[14]));
+                $amount = (isset($data[15]) && is_numeric($data[15]) && $data[15] !== '')
+                    ? (float)$data[15]
+                    : 0;
+
+                $no     = trim($data[0] ?? '');
+                $lname  = trim($data[1] ?? '');
+                $fname  = trim($data[2] ?? '');
+                $city   = trim($data[13] ?? '');
+                $province = trim($data[14] ?? '');
+
+                // ❌ SKIP EMPTY OR INVALID ROWS
+                if ($no === '' && $fname === '' && $lname === '') {
+                    continue;
+                }
+
+                // OPTIONAL stricter rule (recommended)
+                if ($no === '' || $fname === '' || $lname === '') {
+                    continue;
+                }
 
                 // Create a unique key for the province, city, and barangay combination
                 $combinationKey = $province . '-' . $city;
@@ -103,8 +124,8 @@ if (isset($_POST['submit'])) {
 
                 // Insert the beneficiary details into tbl_bene
                 if ($no !== "NO") {
-                    $sql2 = "INSERT INTO ect_clean_list (control_number, first_name, last_name,middle_name,extension_name, birth_day,birth_month,birth_year,purok, barangay, city_municipality, province, team_leader, payroll_date, sdo_id,payroll_no,date_processed,amount)
-                             VALUES ('$no', '$fname', '$lname', '$mname', '$ename', '$dob', '$dom', '$doy', '$purok', '$brgy', '$city', '$province', '$team_leader', '$payroll_date', '$sdo_num','$payrollNo','$date_reg','$amount')";
+                    $sql2 = "INSERT INTO ect_clean_list (control_number, first_name, last_name,middle_name,extension_name, birth_day,birth_month,birth_year, sex, gcash, pcn, purok, barangay, city_municipality, province, team_leader, payroll_date, sdo_id,payroll_no,date_processed,amount)
+                             VALUES ('$no', '$fname', '$lname', '$mname', '$ename', '$dob', '$dom', '$doy', '$sex', '$gcash', '$pcn', '$purok', '$brgy', '$city', '$province', '$team_leader', '$payroll_date', '$sdo_num','$payrollNo','$date_reg','$amount')";
 
                     if ($conn->query($sql2) !== TRUE) {
                         echo "Error: " . $conn->error;
