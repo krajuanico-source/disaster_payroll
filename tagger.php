@@ -294,7 +294,7 @@ $result = $conn->query($sql);
 
 							echo "<tr>";
 							echo "<td>" . strtoupper($row['payroll_id']) . "</td>";
-							echo "<td><span>" . strtoupper($fname . ' ' . $mname . ' ' . $exname . ' ' . $lname) . "</span></td>";
+							echo "<td><span>" . strtoupper($fname . ' ' . $mname . ' ' . $lname . ' ' . $exname) . "</span></td>";
 							echo "<td>" . strtoupper($dob) . "</td>";
 							echo "<td>" . strtoupper($row['barangay'] . ', ' . $row['city_municipality']) . "</td>";
 							echo "<td align='center'>" . strtoupper($status) . "</td>";

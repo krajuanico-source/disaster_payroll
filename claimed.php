@@ -287,6 +287,7 @@ $result = $conn->query($sql);
 							$fname 	= $row['first_name'];
 							$mname 	= $row['middle_name'];
 							$lname 	= $row['last_name'];
+							$exname = $row['extension_name'];
 							$dob 	= $row['birth_month'].'-'.$row['birth_day'].'-'.$row['birth_year'];
 							$status = $row['status'];
 
@@ -296,7 +297,7 @@ $result = $conn->query($sql);
 
 							echo "<tr>";
 							echo "<td>" . $row['payroll_id'] . "</td>";
-							echo "<td><span>" . strtoupper($fname . ' ' . $mname . ' ' . $exname . ' ' . $lname) . "</span></td>";
+							echo "<td><span>" . strtoupper($fname . ' ' . $mname . ' ' . $lname . ' ' . $exname) . "</span></td>";
 							echo "<td>" . strtoupper($dob) . "</td>";
 							echo "<td>" . strtoupper($row['barangay'] . ', ' . $row['city_municipality']) . "</td>";
 							echo "<td align='center'>" . strtoupper($status) . "</td>";

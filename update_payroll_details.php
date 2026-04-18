@@ -2,6 +2,7 @@
   include "dbconnect.php";  // Database connection
 
   $payroll_no = $_POST['payroll_no'];
+  $program     = $_POST['program'];
   $title = $_POST['title'];
   $province = $_POST['province'];
   $date = $_POST['date'];
@@ -10,7 +11,7 @@
   $fund_source = $_POST['fund_source'];
   $citymuni = $_POST['citymuni'];
 
-  $sql = "UPDATE tbl_payroll_list set program='ECT', project_title='$title', province='$province', date_created='$date', amount='$amount', sdo='$sdo', fund_source='$fund_source',city_muni='$citymuni' where payroll_no='$payroll_no'";
+  $sql = "UPDATE tbl_payroll_list set program='$program', project_title='$title', province='$province', date_created='$date', amount='$amount', sdo='$sdo', fund_source='$fund_source',city_muni='$citymuni' where payroll_no='$payroll_no'";
   $result = $conn->query($sql);
 
   if ($result) {

@@ -132,6 +132,7 @@ $payroll_no = $_POST['payroll_no'];
       <thead>
         <tr>
           <th width='10%'>Payroll No</th>
+          <th width='15%'>Program</th>
           <th width='20%'>Title</th>
           <th width='10%'>Province</th>
           <th width='10%'>City/Municipality</th>
@@ -140,6 +141,20 @@ $payroll_no = $_POST['payroll_no'];
       <tbody>
         <tr>
           <td><input type='number' class='form-control' readonly value='<?php echo $payroll['payroll_no']; ?>' id='payroll_no'/></td>
+          <td>
+        <select class="form-control" name="program" id="programu">
+          <option value="" disabled <?php echo (!$payroll['program']) ? 'selected' : ''; ?>>-- Select --</option>
+          <?php
+            $sqlp = "SELECT * FROM lib_program WHERE prog_status = 1";
+            $resultp = mysqli_query($conn, $sqlp);
+            while ($rowp = mysqli_fetch_assoc($resultp)) {
+              $selected = ($payroll['program'] == $rowp['prog_name']) ? 'selected' : '';
+              echo '<option value="' . $rowp['prog_name'] . '" ' . $selected . '>'
+                  . $rowp['prog_name'] . '</option>';
+            }
+          ?>
+        </select>
+      </td>
           <td><input type='text' class='form-control' id='title' style='padding-right:20px' value='<?php echo $payroll['project_title']; ?>'/></td>
           <td>
 		   <select class="form-control" name="province" id="province" style="padding-right:20px">
@@ -163,8 +178,8 @@ $payroll_no = $_POST['payroll_no'];
         <tr>
           <th width='5%'>Date Created</th>
           <th width='5%'>Amount</th>
-          <th width='20%'>SDO</th>
-          <th width='20%'>Partner</th>
+          <th width='15%'>SDO</th>
+          <th width='15%'>Partner</th>
         </tr>
       </thead>
       <tbody>
@@ -215,9 +230,10 @@ function saveDetails() {
   var amount = document.getElementById('amountu').value.trim();
   var fund_source = document.getElementById('fund_sourceu').value.trim();
   var citymuni = document.getElementById('citymuni').value.trim();
+  var program     = document.getElementById('programu').value.trim();
 
   // Check if any field is empty
-  if (!payroll_no || !title || !province || !date || !sdo || !amount || !fund_source || !citymuni) {
+  if (!payroll_no || !title || !province || !date || !sdo || !amount || !fund_source || !citymuni || !program) {
     alert("All fields are required. Please fill in all the details.");
     return; // Stop execution
   }
@@ -233,7 +249,8 @@ function saveDetails() {
       amount: amount,
       sdo: sdo,
       citymuni:citymuni,
-      fund_source: fund_source
+      fund_source: fund_source,
+      program:     program
     },
     success: function(response) {
       alert("Details saved successfully!");
