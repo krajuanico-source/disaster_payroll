@@ -177,6 +177,8 @@ $payroll_no = $_POST['payroll_no'];
       <thead>
         <tr>
           <th width='5%'>Date Created</th>
+          <th width='5%'>Date From</th> 
+          <th width='5%'>Date To</th> 
           <th width='5%'>Amount</th>
           <th width='15%'>SDO</th>
           <th width='15%'>Partner</th>
@@ -185,6 +187,15 @@ $payroll_no = $_POST['payroll_no'];
       <tbody>
         <tr>
           <td><input type='date' class='form-control' id='date' value='<?php echo $payroll['date_created']; ?>'/></td>
+          <td>
+          <input type='date' class='form-control' id='date_from'
+            value='<?php echo $payroll['date_from'] ?? ""; ?>'>
+        </td>
+
+        <td>
+          <input type='date' class='form-control' id='date_to'
+            value='<?php echo $payroll['date_to'] ?? ""; ?>'>
+        </td>
           <td><input type='number' class='form-control' id='amountu' value='<?php echo $payroll['amount']; ?>'/></td>
           <td>
             <input class="form-control" name="sdou" id="sdou" style="padding-right:20px" value='<?php echo $payroll['sdo']; ?>'></input>
@@ -231,6 +242,8 @@ function saveDetails() {
   var fund_source = document.getElementById('fund_sourceu').value.trim();
   var citymuni = document.getElementById('citymuni').value.trim();
   var program     = document.getElementById('programu').value.trim();
+  var date_from = document.getElementById('date_from').value.trim();
+  var date_to   = document.getElementById('date_to').value.trim();
 
   // Check if any field is empty
   if (!payroll_no || !title || !province || !date || !sdo || !amount || !fund_source || !citymuni || !program) {
@@ -250,7 +263,9 @@ function saveDetails() {
       sdo: sdo,
       citymuni:citymuni,
       fund_source: fund_source,
-      program:     program
+      program:     program,
+      date_from: date_from, 
+      date_to: date_to   
     },
     success: function(response) {
       alert("Details saved successfully!");

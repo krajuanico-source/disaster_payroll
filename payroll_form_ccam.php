@@ -21,6 +21,8 @@
         $team_leader   = $row["team_leader"]; 
         $city_muni     = strtoupper($row["city_muni"]);
         $province     = strtoupper($row["province"]);
+        $date_from = $row["date_from"];
+        $date_to   = $row["date_to"];
     }
 
     if ($page_no > 0) {
@@ -92,7 +94,7 @@
             </tr>
         </table>
 
-        <p style="font-size:12px; text-align:justify;">FOR PAYMENT OF CASH FOR RISK RESILIENCY PROGRAM ON CLIMATE CHANGE ADAPTATION THRU CASH-FOR-TRAINING AND WORK (CFTW) - PROJECT LAWA AT BINHI IN <b><?php echo $province; ?></b> FOR THE PERIOD OF ______________, 2025</p>
+        <p style="font-size:12px; text-align:justify;">FOR PAYMENT OF CASH FOR RISK RESILIENCY PROGRAM ON CLIMATE CHANGE ADAPTATION THRU CASH-FOR-TRAINING AND WORK (CFTW) - PROJECT LAWA AT BINHI IN <b><?php echo $province; ?></b> FOR THE PERIOD OF <b><?php echo date("F d, Y", strtotime($date_from)); ?></b> to <b><?php echo date("F d, Y", strtotime($date_to)); ?></b></p>
 
         <h4>CITY/MUNICIPALITY: <?php echo $city_muni; ?></h4>
 

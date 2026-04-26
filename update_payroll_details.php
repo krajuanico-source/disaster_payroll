@@ -10,8 +10,21 @@
   $sdo = $_POST['sdo'];
   $fund_source = $_POST['fund_source'];
   $citymuni = $_POST['citymuni'];
+  $date_from = $_POST['date_from'] ?? null;
+  $date_to   = $_POST['date_to'] ?? null;
 
-  $sql = "UPDATE tbl_payroll_list set program='$program', project_title='$title', province='$province', date_created='$date', amount='$amount', sdo='$sdo', fund_source='$fund_source',city_muni='$citymuni' where payroll_no='$payroll_no'";
+$sql = "UPDATE tbl_payroll_list SET
+    project_title = '$title',
+    province = '$province',
+    date_created = '$date',
+    amount = '$amount',
+    sdo = '$sdo',
+    city_muni = '$citymuni',
+    fund_source = '$fund_source',
+    program = '$program',
+    date_from = " . ($date_from ? "'$date_from'" : "NULL") . ",
+    date_to   = " . ($date_to ? "'$date_to'" : "NULL") . "
+WHERE payroll_no = '$payroll_no'";
   $result = $conn->query($sql);
 
   if ($result) {
