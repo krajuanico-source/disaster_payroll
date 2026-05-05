@@ -124,7 +124,12 @@ $result = $conn->query($sql);
 				<li>
 					<a href="validation.php?userid=<?php echo $emm;?>"><i class="pe-7s-folder"></i><span><b>Masterlist</span></b> </a>
 				</li>
-				
+				<?php }?>
+					<input hidden id="user_id" value="<?php echo $emm;?>"/>
+				<?php if($user_type=='Team Leader'||$user_type=='Validator'||$user_type=='GO'){ ?>
+				<li class="">
+					<a href="served_list.php?userid=<?php echo $emm;?>"><i class="pe-7s-folder"></i><span><b>Served List</span></b> </a>
+				</li>				
 				<?php }
 				if($user_type=='Team Leader'||$user_type=='Tagger'){ ?>
 				<li>
