@@ -100,7 +100,7 @@ $payroll_no = $_POST['payroll_no'];
     <!-- Close Payroll Button on the left -->
     <div class="col-md-4 text-left">
       <button type='button' class='btn btn-danger' id='closePayrollBtn'>Close Payroll</button>
-      <button type='button' class='btn btn-info' id='addDetails' onclick="confirmSaveDetails()">Add Details</button>
+      <button type='button' class='btn btn-info' id='addDetails' onclick="confirmSaveDetails()">Save Details</button>
     </div>
 
     <!-- Generate Payroll Button and Page Dropdown on the right -->

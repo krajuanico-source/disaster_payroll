@@ -48,15 +48,14 @@
         @media print {
             .page-break { display: block; page-break-before: always; }
             .no-print { visibility: hidden; }
-            .claimed-row { background-color: rgba(200, 200, 200, 0.2); }
             .claimed-watermark {
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(-30deg);
-                font-size: 18px;
+                font-size: 14px;
                 font-weight: bold;
-                color: rgba(255, 0, 0, 0.35);
+                color: rgba(255, 0, 0, 0.5);
                 white-space: nowrap;
                 pointer-events: none;
                 z-index: 10;
@@ -107,44 +106,63 @@
             </thead>
             <tbody>
                 <?php
-               $subtotal = 0;
-                while ($row_bene = mysqli_fetch_assoc($result_bene)) {
-                    $lname      = str_replace('Ã', 'Ñ', $row_bene['last_name']);
-                    $mname      = str_replace('Ã', 'Ñ', $row_bene['middle_name']);
-                    $fname      = mb_strtoupper(mb_convert_encoding($row_bene['first_name'], 'UTF-8', 'auto'), 'UTF-8');
-                    $ename      = preg_replace('/[^a-zA-Z0-9\s]/', '', $row_bene['extension_name']);
-                    $ename      = mb_strtoupper(mb_convert_encoding($ename, 'UTF-8', 'auto'), 'UTF-8');
-                    $amount     = $row_bene["amount"];
-                    $payroll_id = $row_bene['payroll_id'];
-                    $barangay   = strtoupper($row_bene['barangay']);
-                    $subtotal  += $amount;
+$subtotal = 0;
+$claimed_rows = [];
+$row_index = 0;
+$first_claimed_index = null;
+$last_claimed_index = null;
+$rows_html = '';
 
-                    // Check if already printed on a previous day
-                    $date_printed    = $row_bene['date_printed'];
-                    $printed_by      = $row_bene['printed_by'];
-                    $already_printed = !empty($date_printed) &&
-                                    !empty($printed_by) &&
-                                    date('Y-m-d', strtotime($date_printed)) < date('Y-m-d');
+while ($row_bene = mysqli_fetch_assoc($result_bene)) {
+    $lname      = str_replace('Ã', 'Ñ', $row_bene['last_name']);
+    $mname      = str_replace('Ã', 'Ñ', $row_bene['middle_name']);
+    $fname      = mb_strtoupper(mb_convert_encoding($row_bene['first_name'], 'UTF-8', 'auto'), 'UTF-8');
+    $ename      = preg_replace('/[^a-zA-Z0-9\s]/', '', $row_bene['extension_name']);
+    $ename      = mb_strtoupper(mb_convert_encoding($ename, 'UTF-8', 'auto'), 'UTF-8');
+    $amount     = $row_bene["amount"];
+    $payroll_id = $row_bene['payroll_id'];
+    $barangay   = strtoupper($row_bene['barangay']);
 
-                    $save_special = "UPDATE ect_clean_list SET printed_by='$emm', date_printed='$date_val' WHERE payroll_id='$payroll_id' AND payroll_no='$payroll_no'";
-                    mysqli_query($conn, $save_special);
-                ?>
-                    <tr class="td01 <?php echo $already_printed ? 'claimed-row' : ''; ?>">
-                        <td class="td01" align="center"><?php echo $ctr; ?></td>
-                        <td class="td01" align="center"><?php echo strtoupper($lname); ?></td>
-                        <td class="td01" align="center"><?php echo strtoupper($fname . ' ' . $ename); ?></td>
-                        <td class="td01" align="center"><?php echo strtoupper($mname); ?></td>
-                        <td class="td01" align="center"><?php echo $barangay; ?></td>
-                        <td class="td01" align="center"><?php echo number_format($amount, 2); ?></td>
-                        <td class="td01" style="position:relative;" align="center">
-                            <?php if ($already_printed) : ?>
-                                <span class="claimed-watermark">CLAIMED</span>
-                            <?php endif; ?>
-                            &emsp;
-                        </td>
-                        <td class="td01">&emsp;</td>
-                    </tr>
-                <?php $ctr++; } ?>
+    $date_printed    = $row_bene['date_printed'];
+    $printed_by      = $row_bene['printed_by'];
+    $already_printed = !empty($date_printed) &&
+                       !empty($printed_by) &&
+                       date('Y-m-d', strtotime($date_printed)) < date('Y-m-d');
+
+    // Subtotal only for today's claimed
+    if (!$already_printed) {
+        $subtotal += $amount;
+    }
+
+    // Only save if not yet recorded
+    if (empty($date_printed) || empty($printed_by)) {
+        $save_special = "UPDATE ect_clean_list SET printed_by='$emm', date_printed='$date_val' 
+                         WHERE payroll_id='$payroll_id' AND payroll_no='$payroll_no'";
+        mysqli_query($conn, $save_special);
+    }
+
+    $row_id = 'bene-row-' . $payroll_id;
+    if ($already_printed) {
+        $claimed_rows[] = $row_id;
+    }
+?>
+        <tr class="td01 <?php echo $already_printed ? 'claimed-row' : ''; ?>" id="<?php echo $row_id; ?>">
+            <td class="td01" align="center"><?php echo $ctr; ?></td>
+            <td class="td01" align="center"><?php echo $already_printed ? '&emsp;' : strtoupper($lname); ?></td>
+            <td class="td01" align="center"><?php echo $already_printed ? '&emsp;' : strtoupper($fname . ' ' . $ename); ?></td>
+            <td class="td01" align="center"><?php echo $already_printed ? '&emsp;' : strtoupper($mname); ?></td>
+            <td class="td01" align="center"><?php echo $already_printed ? '&emsp;' : $barangay; ?></td>
+            <td class="td01" align="center"><?php echo $already_printed ? '&emsp;' : number_format($amount, 2); ?></td>
+            <td class="td01" align="center">
+                <?php if ($already_printed): ?>
+                    <span style="color:red; font-weight:bold; font-size:12px;">ALREADY CLAIMED</span>
+                <?php else: ?>
+                    &emsp;
+                <?php endif; ?>
+            </td>
+            <td class="td01">&emsp;</td>
+        </tr>
+<?php $ctr++; } ?>
                 <tr>
                     <td colspan="5" align="right"><h3>Subtotal</h3></td>
                     <td align="center"><h3><?php echo number_format($subtotal, 2); ?></h3></td>
@@ -164,8 +182,56 @@
                     <td colspan="2">&emsp;</td>
                 </tr>
                 <?php } ?>
-            </tbody>
-        </table>
+                </tbody>
+                </table>
+
+                <!-- ONE BIG WATERMARK OVER ALL CLAIMED ROWS -->
+                <div id="claimed-overlay" style="
+                    display:none;
+                    position:absolute;
+                    pointer-events:none;
+                    z-index:100;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    overflow:hidden;
+                ">
+                    <span style="
+                        font-size:60px;
+                        font-weight:bold;
+                        color:rgba(255,0,0,0.35);
+                        transform:rotate(-30deg);
+                        white-space:nowrap;
+                        display:block;
+                    ">ALREADY CLAIMED</span>
+                </div>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var claimedIds = <?php echo json_encode($claimed_rows); ?>;
+                    if (claimedIds.length === 0) return;
+
+                    var firstRow = document.getElementById(claimedIds[0]);
+                    var lastRow  = document.getElementById(claimedIds[claimedIds.length - 1]);
+
+                    if (!firstRow || !lastRow) return;
+
+                    var firstRect = firstRow.getBoundingClientRect();
+                    var lastRect  = lastRow.getBoundingClientRect();
+
+                    var top    = firstRect.top + window.scrollY;
+                    var left   = firstRect.left + window.scrollX;
+                    var width  = firstRect.width;
+                    var height = (lastRect.bottom + window.scrollY) - top;
+
+                    var overlay = document.getElementById('claimed-overlay');
+                    overlay.style.top    = top + 'px';
+                    overlay.style.left   = left + 'px';
+                    overlay.style.width  = width + 'px';
+                    overlay.style.height = height + 'px';
+                    overlay.style.display = 'flex';
+                });
+                </script>
     </div>
 
     <br><br>

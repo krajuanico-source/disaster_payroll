@@ -1,5 +1,6 @@
 <?php
-$payroll_no = $_GET['payroll_no'];
+session_start();
+$payroll_no = $_GET['payroll_no'];  
 $page_no    = $_GET['page_no'];
 $isLastPage = $_GET['isLastPage'];
 
