@@ -383,11 +383,6 @@ $disqualfied  = getCount($conn, $payroll_no, 'disqualfied');
                         <?php } ?>
                     </select>
                 </div>
-
-                <!-- Date Input Field -->
-                <div class="col-md-3" style="float: left; margin-left: -210px;">
-                    <input type="date" class="form-control" id="payroll_date" name="payroll_date" placeholder="Select Date">
-                </div>
             </div>
 
 			<div class="container-fluid">
