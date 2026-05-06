@@ -14,12 +14,6 @@ session_start();
 		$payroll_no=$row2['payroll_no'];
         $empname     = $row2['empname']; 
 
-		// db connection
-		$conn = new mysqli("localhost", "root", "", "disaster_db");
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
-		
 		function getCount($conn, $payroll_no, $status = null) {
 			if ($status === null) {
 				// Count all beneficiaries for a specific payroll_no
