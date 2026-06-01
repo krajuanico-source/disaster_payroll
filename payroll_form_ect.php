@@ -245,6 +245,9 @@ while ($row_bene = mysqli_fetch_assoc($result_bene)) {
                     <td colspan="4" align="center"><label>Approved By:</label></td>
                 </tr>
                 <tr>
+                <td colspan="8" style="height: 20px;"></td>
+                </tr>
+                <tr>
                     <td colspan="4" align="center"><b>_________<u>MERLINDA A. PARAGAMAC, RSW MSDA</u>_________</b></td>
                     <td colspan="4" align="center"><b>_________<u>Dir. RHUELO D. ARADANAS, Ph.D</u>_________</b></td>
                 </tr>

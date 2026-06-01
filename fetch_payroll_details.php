@@ -3,6 +3,7 @@ session_start();
 include "dbconnect.php";  // Database connection
 error_reporting(0);
 $emm=$_SESSION['userid'];
+$user_type = $_SESSION['user_type'];
 $payroll_no = $_POST['payroll_no'];
 
     // Fetch payroll details
@@ -19,20 +20,25 @@ $payroll_no = $_POST['payroll_no'];
 		
 			
 		if($payroll_status=='Closed'){ ?>
-		<div class="container">
-			  <div class="row">
-			  <?php if($user_type=='Team Leader'){ ?>
-				  <!-- Re-open Payroll Button on the left -->
-				<div class="col-md-6 text-left">
-				  <button type='button' class='btn btn-primary' id='openPayrollBtn'>Re-open Payroll</button>
-				</div>
-			  <?php }?>
-				<!-- Generate Payroll Button and Page Dropdown on the right -->
-				<div class="col-md-6 text-right">
-					<button type='button' class='btn btn-success' id='generatePayrollBtn1'>Generate Payroll</button></center>
-				</div>
-			  </div>
-			</div>
+    <div class="container text-center">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <?php if(trim($user_type) == 'Team Leader'){ ?>
+            <button type="button"
+                    class="btn btn-primary"
+                    id="openPayrollBtn">
+                Re-open Payroll
+            </button>
+        <?php } ?>
+
+        <button type="button"
+                class="btn btn-success"
+                id="generatePayrollBtn1">
+            Generate Payroll
+        </button>
+
+    </div>
+</div>
 	<?php		
     echo "<center><br><br><table width='90%' style='text-align:left;'>
             <thead>
@@ -97,13 +103,12 @@ $payroll_no = $_POST['payroll_no'];
 	else{ ?>
   <div class="row">
 
-    <!-- Close Payroll Button on the left -->
     <div class="col-md-4 text-left">
       <button type='button' class='btn btn-danger' id='closePayrollBtn'>Close Payroll</button>
       <button type='button' class='btn btn-info' id='addDetails' onclick="confirmSaveDetails()">Save Details</button>
     </div>
 
-    <!-- Generate Payroll Button and Page Dropdown on the right -->
+
     <div class="col-md-4 text-right">
       <div class="form-inline">
         <button type='button' class='btn btn-success mr-2' id='generatePayrollBtn'>Generate Payroll</button>
@@ -112,9 +117,9 @@ $payroll_no = $_POST['payroll_no'];
           <?php
             $sql2 = "SELECT id FROM ect_clean_list WHERE payroll_no = '$payroll_no' AND status in ('Validated','Claimed') ORDER BY payroll_id ASC";
             $result2 = $conn->query($sql2);
-            $totalBene = mysqli_num_rows($result2); // Get total number of beneficiaries
-            $benePerPage = 10; // Number of beneficiaries per page
-            $totalPages = ceil($totalBene / $benePerPage); // Calculate total pages              
+            $totalBene = mysqli_num_rows($result2); 
+            $benePerPage = 10; 
+            $totalPages = ceil($totalBene / $benePerPage);             
             for ($i = $totalPages; $i >= 1; $i--) {
               echo "<option value='$i'>Page $i</option>";
             } 

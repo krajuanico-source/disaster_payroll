@@ -359,7 +359,7 @@ $disqualfied  = getCount($conn, $payroll_no, 'disqualfied');
 				<div class="row" > <div class="form-inline">
 					<div class="col-md-19" style="float: left;">
 						<button type="button" class="btn btn-primary" id="syncDataButton1">
-							<i class="fas fa-file-export"></i> Export All Data
+							<i class="fas fa-file-export"></i> Export Payroll
 						</button>
 			</div>
 			<div class="row">
@@ -490,7 +490,7 @@ $('#exportfile').click(function() {
             closeModalBtn.disabled = false;
             closeModalBtn.classList.remove("btn-primary");
             closeModalBtn.classList.add("btn-info");
-            closeModalBtn.innerText = "PAGHULAT!";
+            closeModalBtn.innerText = "Please wait...";
 
             document.getElementById('runImportbtn').disabled = true;
             document.getElementById("fileError").style.display = "none";

@@ -89,7 +89,9 @@ while ($offset < $total_records) {
             </tr>
             <tr>
                 <th>&emsp;</th>
-                <th align="center"><h3>CASH ASSISTANCE PAYROLL</h3></th>
+                <th align="center" style="padding-bottom: 5px;">
+                    <h3 style="margin: 0;">CASH ASSISTANCE PAYROLL</h3>
+                </th>
                 <th>&emsp;</th>
             </tr>
         </table>
@@ -126,10 +128,6 @@ while ($offset < $total_records) {
                     <td align="center" class="td01"><?php echo $barangay; ?></td>
                     <td align="center" class="td01"><?php echo number_format($amount, 2); ?></td>
                     <td align="left" class="td01">&emsp;</td>
-                    <!-- <td align="center" class="td01"><?php echo $row_bene['date_validated']; ?></td> -->
-                     <td align="center" class="td01">
-                        <?php echo date("m-d-Y", strtotime($row_bene['date_validated'])); ?>
-                    </td>
                 </tr>
                 <?php $counter++; } ?>
                 <tr>
@@ -159,6 +157,9 @@ while ($offset < $total_records) {
             <tr>
                 <td colspan="2" align="center"><label>Recommending Approval:</label></td>
                 <td colspan="4" align="center"><label>Approved By:</label></td>
+            </tr>
+            <tr>
+                <td colspan="8" style="height: 20px;"></td>
             </tr>
                         <tr>
                             <td colspan="4" align="center"><b>_________<u>MERLINDA A. PARAGAMAC, RSW MSDA</u>_________</b></td>
