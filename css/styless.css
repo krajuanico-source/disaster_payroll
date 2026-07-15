@@ -33,8 +33,6 @@ img { max-width: 100%; }
 /***** Top menu *****/
 
 .navbar {
-	padding-top: 10px;
-	padding-bottom: 5px;
 	background: #333;
 	background: rgba(51, 51, 51, 0.7);
 	border: 0;
@@ -62,11 +60,6 @@ ul.navbar-nav {
 .navbar-inverse ul.navbar-nav li .li-social a:hover, 
 .navbar-inverse ul.navbar-nav li .li-social a:focus { border: 0; color: #a93a52; }
 
-.navbar-brand {
-	width: 229px;
-	background: url(../img/logo.png) left center no-repeat;
-	text-indent: -99999px;
-}
 .navbar>.container .navbar-brand { margin-left: 0; }
 
 
@@ -77,52 +70,86 @@ ul.navbar-nav {
 	padding-bottom: 40px;
 	text-align: center;
 }
-
 .description-title { padding-bottom: 10px; }
 .description-text { opacity: 0.8; }
-
 .description-text a { color: #fff; border: 0; }
 .description-text a:hover,
 .description-text a:focus { color: #fff; border-bottom: 1px dotted #fff; }
-
 .description-text .divider-1 { margin-top: 50px; }
-
-
-/***** Multi Step Form *****/
-
 .msf-container { padding-bottom: 80px; text-align: center; }
-
 .msf-title h3 { padding-bottom: 10px; font-weight: 700; }
 .msf-title p { opacity: 0.8; }
-
-.msf-form h4 {
-	margin-top: 20px;
-	margin-bottom: 30px;
-	font-weight: 700;
-	line-height: 26px;
-}
+.msf-form h4 {margin-top: 20px; margin-bottom: 30px; font-weight: 700; line-height: 26px;}
 .msf-form h4 .step { color: #aaa; }
-
 .msf-form form fieldset { display: none; overflow: hidden; }
-
 .msf-form form input[type="text"] { width: 400px; margin-left: 5px; margin-right: 5px; }
 .msf-form form input[type="date"] { width: 400px; margin-left: 5px; margin-right: 5px; }
-
 .msf-form form textarea.form-control { width: 700px; height: 160px; }
-
 .msf-form form select.form-control { width: 400px; margin-left: 5px; margin-right: 5px; }
-
 .msf-form form .form-group { margin-bottom: 15px; }
-
 .msf-form form button.btn { min-width: 110px; margin-top: 15px; margin-left: 5px; margin-right: 5px; }
-
 .msf-form form p { opacity: 0.8; }
-
 .msf-form form .radio-buttons-1,
 .msf-form form .radio-buttons-2,
 .msf-form form .checkboxes-1,
 .msf-form form .checkboxes-2 { display: inline-block; margin: 0 15px 20px 15px; }
-
 .msf-form form .selects-1,
 .msf-form form .selects-2 { display: inline-block; margin: 0 0 20px 0; }
 
+/* Button Designs */
+
+.btn{
+	margin-left: 10px;
+}
+
+.btn.view-payroll, .btn.btn-primary, #claimButton, .btn.update-btn, .btn.add-btn, .btn.update-status-btn{
+    border-radius: 5px !important;
+    padding: 6px 22px !important;
+    background-color: #1d4bb2 !important;
+    border-color: #1d4bb6 !important;
+    color: #fff !important;
+    min-width: 100px;
+    letter-spacing: 0.3px;
+}
+
+.btn.btn-warning.replacement-status-btn {
+    border-radius: 5px !important;
+    padding: 6px 22px !important;
+    background-color: #F59E0B !important;
+    border-color: #F59E0B !important;
+    color: #fff !important;
+    min-width: 100px;
+    letter-spacing: 0.3px;
+}
+
+.btn.btn-warning.correction-status-btn {
+    border-radius: 5px !important;
+    padding: 6px 22px !important;
+    background-color: #EAB308!important;
+    border-color: #EAB308 !important;
+    color: #fff !important;
+    min-width: 100px;
+    letter-spacing: 0.3px;
+}
+
+.btn.btn-danger {
+    border-radius: 5px !important;
+    padding: 6px 22px !important;
+    background-color: #DC2626!important;
+    border-color: #DC2626 !important;
+    color: #fff !important;
+    min-width: 100px;
+    letter-spacing: 0.3px;
+}
+.table{
+    background-color: #fff;
+}
+.btn.btn-secondary-close{
+    border-radius: 5px !important;
+    padding: 6px 22px !important;
+    background-color: #6B7280!important;
+    border-color: #6B7280 !important;
+    color: #fff !important;
+    min-width: 100px;
+    letter-spacing: 0.3px;
+}

@@ -29,14 +29,19 @@ try {
     $paramTypes = '';
 
     if ($search !== '') {
-        $where = "WHERE CONCAT_WS(' ', 
-                    CONVERT(first_name USING utf8mb4), 
-                    CONVERT(middle_name USING utf8mb4), 
-                    CONVERT(last_name USING utf8mb4), 
-                    CONVERT(IFNULL(extension_name, '') USING utf8mb4)
-                 ) COLLATE utf8mb4_general_ci LIKE ?";
-        $params[] = "%$search%";
-        $paramTypes .= "s";
+        $searchWords = preg_split('/\s+/', trim($search));
+        $conditions = [];
+        foreach ($searchWords as $word) {
+            $conditions[] = "CONCAT_WS(' ', 
+                                CONVERT(first_name USING utf8mb4), 
+                                CONVERT(middle_name USING utf8mb4), 
+                                CONVERT(last_name USING utf8mb4), 
+                                CONVERT(IFNULL(extension_name, '') USING utf8mb4)
+                            ) COLLATE utf8mb4_general_ci LIKE ?";
+            $params[] = "%$word%";
+            $paramTypes .= "s";
+        }
+        $where = "WHERE " . implode(" AND ", $conditions);
     }
     
     // 3. TOTAL RECORD COUNT
@@ -64,7 +69,7 @@ try {
             CONCAT_WS(' ', first_name, middle_name, last_name, IFNULL(extension_name, '')) AS fullname,
             CONCAT(LPAD(birth_month,2,'0'), '-', LPAD(birth_day,2,'0'), '-', birth_year) AS dob,
             province,
-            city_municipality,date_last_served
+            city_municipality,last_served_location,date_last_served
         FROM ect_served_database
         $where
         ORDER BY id ASC
@@ -97,6 +102,7 @@ try {
             $row['dob'],
             htmlspecialchars($row['province']),
             htmlspecialchars($row['city_municipality']),
+            htmlspecialchars($row['last_served_location']),
             $row['date_last_served']
         ];
     }

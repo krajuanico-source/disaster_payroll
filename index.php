@@ -87,8 +87,18 @@ $date_today1 = date("Y-m-d");
 include("dbconnect.php"); 
 
 if (isset($_POST['login'])){ 		
-	$empid=$_POST['empid']; 
-	$user_pass=utf8_encode($_POST['pass']);  
+	$empid = trim($_POST['empid']);
+	$pass  = trim($_POST['pass']);
+
+	if ($empid === '' && $pass === '') {
+		echo "<script>alert('Employee ID and Password are required!');</script>";
+	} elseif ($empid === '') {
+		echo "<script>alert('Employee ID is required!');</script>";
+	} elseif ($pass === '') {
+		echo "<script>alert('Password is required!');</script>";
+	} else {
+
+		$user_pass = utf8_encode($pass);
 
 		$sql1 = "SELECT * from lib_users where empid ='$empid' and emppassword = '$user_pass'";
 		$result1 = mysqli_query($conn,$sql1);
@@ -141,4 +151,5 @@ if (isset($_POST['login'])){
 			echo "<script>alert('Invalid Credentials!');</script>";
 		}
 	}
+}
 ?>

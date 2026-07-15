@@ -28,7 +28,9 @@ $sql1 = "SELECT *
         FROM tbl_payroll_list as a
 		LEFT JOIN lib_sdo as c on sdo=c.sdo_id
 		LEFT JOIN lib_fund_source as d on fund_source=d.id
-		WHERE  team_leader='$team_leader' ";  // Adjust the table name to your actual payroll table
+		WHERE  team_leader='$team_leader'
+		ORDER BY a.payroll_no DESC";
+
 $result1 = $conn->query($sql1);
 ?>
 <html lang="en">
@@ -36,27 +38,22 @@ $result1 = $conn->query($sql1);
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="images/icons/dswd_icon.jpg">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
 	<title>DSWD FO XI - ECT Payroll System</title>
-
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width" />
 
+	<link href="css/styless.css" rel="stylesheet" />
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/css/animate.min.css" rel="stylesheet"/>
+	<link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+	<link href='css/googleapis.css' rel='stylesheet' type='text/css'>
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="css/dataTables.min.css">
 
-    <!-- Bootstrap core CSS     -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
-    <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
-    <link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
-	
-    <link href='css/googleapis.css' rel='stylesheet' type='text/css'>
-    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-	
-	  <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<script src="js/jquery-3.6.0.min.js"></script>
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="js/dataTables.min.js"></script>
 
 
 
@@ -64,7 +61,10 @@ $result1 = $conn->query($sql1);
 	<script src="js/jquery.js"></script>
 	<style>
 		body {
-		  font-size: 16px;
+		    font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
 		}
 		.modal {
 		  z-index: 1060; /* increase the z-index to be higher than the page's content */
@@ -366,7 +366,7 @@ $result1 = $conn->query($sql1);
 					$row_class     = ($status == 'Active') ? 'success' : (($status == 'Closed') ? 'danger' : '');
 				
 					echo "<tr class='$row_class'>";
-					echo "<td>" . $no++ . "</td>";
+					echo "<td>" . $payroll_no . "</td>";
 					echo "<td>" . $program . "</td>";
 					echo "<td>" . $province . "</td>";
 					echo "<td>" . $date_created . "</td>";
@@ -440,11 +440,11 @@ $(document).ready(function() {
         $('#payroll-details').html(''); // Clear modal content when hidden
     });
 });
-    // Initialize DataTable
-    $('#payrollTable').DataTable({
-        "aLengthMenu": [[10, 20, 30, -1], [10, 20, 30, "All"]],
-        "iDisplayLength": 10
-    });
+	$('#payrollTable').DataTable({
+		"aLengthMenu": [[10, 20, 30, -1], [10, 20, 30, "All"]],
+		"iDisplayLength": 10,
+		"order": [[0, 'desc']]
+	});
 	
 
 </script>

@@ -5,7 +5,7 @@ error_reporting(0);
     include "dbconnect.php";
 	
 	$emm=$_SESSION['userid'];
-	$user_type = $_SESSION['user_type']; // get the user type from the database or session
+	$user_type = $_SESSION['user_type'];
 	if($emm==''||$emm==NULL){
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
@@ -17,7 +17,6 @@ error_reporting(0);
 	$payroll_no=$row2['payroll_no'];
 	$empname   = $row2['empname'];
 	
-// SQL query to fetch payroll list from the database
 $sql = "SELECT * FROM ect_clean_list WHERE status IN ('Validated') and payroll_no='$payroll_no' order by status desc";  // Adjust the table name to your actual payroll table
 $result = $conn->query($sql);
 ?>
@@ -26,73 +25,41 @@ $result = $conn->query($sql);
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="images/icons/dswd_icon.jpg">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
 	<title>DSWD FO XI - ECT Payroll System</title>
-
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
-
-    <!-- Bootstrap core CSS     -->
+	<link href="css/styless.css" rel="stylesheet" />
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
-	
     <link href='css/googleapis.css' rel='stylesheet' type='text/css'>
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-	
-
-	<!-- DataTables JS -->
 	<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.min.js"></script>
-
 	<script src="js/jquery.js"></script>
 	<style>
-		body {
-		  font-size: 16px;
-		}
-		.modal {
-		  z-index: 1060; /* increase the z-index to be higher than the page's content */
-		}
-		/* Custom CSS to force modal to be extra large */
-		.modal-xl {
-			max-width: 70%;  /* Adjust the width as per your requirement */
-			width: 70%;      /* Set width to 90% of the screen */
-		}
-		tr.success {
-			background-color: #dff0d8; /* green */
-		}
-
-		tr.danger {
-			background-color: #f2dede; /* red */
-		}
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
 	</style>
 	
 </head>
 <script>
-        // Disable right-click context menu
         document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Disable specific key combinations and F12
         document.addEventListener("keydown", (event) => {
             if (
-                event.shiftKey || // Disable Shift key
-                event.ctrlKey ||  // Disable Ctrl key
-                event.key === "F12" // Disable F12
+                event.shiftKey || 
+                event.ctrlKey || 
+                event.key === "F12"
             ) {
                 event.preventDefault();
-                //alert("This action is disabled!");
             }
         });
-
-        // Prevent Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
         document.addEventListener("keydown", (event) => {
             if (event.ctrlKey && event.shiftKey && ["I", "J", "C"].includes(event.key.toUpperCase())) {
                 event.preventDefault();
-                //alert("Developer tools shortcuts are disabled!");
             }
         });
     </script>
@@ -101,7 +68,6 @@ $result = $conn->query($sql);
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-6.jpg">
 <input hidden id="teamLeader" value='<?php echo $team_leader;?>'></input>
-    <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
 	<div class="sidebar-wrapper">
              <div class="logo">
 			
@@ -163,15 +129,11 @@ $result = $conn->query($sql);
 						</ul>						
 					</div>
 				</li>
-				<!-- <li>
-					<a href="https://172.31.176.49/ect/public"><i class="pe-7s-folder"></i><span><b>Liquidation</span></b> </a>
-				</li> -->
 				<?php } ?>
 			</ul>			
     </div>
 </div>
 
-			<!-- Modal -->
 			<div id="claimModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="payrollModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
@@ -184,13 +146,12 @@ $result = $conn->query($sql);
 						<div class="modal-body">
 							<input type="hidden" class="form-control" id="bene-id-input" value="">
 							<div id="payroll-details">
-								<!-- Payroll details content will be dynamically loaded here -->
 								<p>Beneficiary ID: <span id="bene-id-display"></span></p>
 							</div>
 							
 						</div>
 						<div class="modal-footer">
-						   <button class="btn btn-primary" id="claimButton">Update</button>
+						   <button class="btn" id="claimButton">Update</button>
 						</div>
 					</div>
 				</div>
@@ -278,6 +239,7 @@ $result = $conn->query($sql);
                         <th>Beneficiary Name</th>
                         <th>Date of Birth</th>
                         <th>Barangay</th>
+						<th>Validated By</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -293,6 +255,7 @@ $result = $conn->query($sql);
 							$lname 	= $row['last_name'];
 							$exname = $row['extension_name'];
 							$dob 	= $row['birth_month'].'-'.$row['birth_day'].'-'.$row['birth_year'];
+							$validated_by = $row['validated_by'];
 							$status = $row['status'];
 
 							
@@ -302,6 +265,7 @@ $result = $conn->query($sql);
 							echo "<td><span>" . strtoupper($fname . ' ' . $mname . ' ' . $lname . ' ' . $exname) . "</span></td>";
 							echo "<td>" . strtoupper($dob) . "</td>";
 							echo "<td>" . strtoupper($row['barangay'] . ', ' . $row['city_municipality']) . "</td>";
+							echo "<td>" . strtoupper($validated_by) . "</td>";
 							echo "<td align='center'>" . strtoupper($status) . "</td>";
 
 							// If the status is 'Claimed', disable the button
@@ -339,6 +303,7 @@ $result = $conn->query($sql);
 						}
 					} else {
 						echo "<tr>
+						<td class='text-center'>No payroll records found</td>
 						<td class='text-center'>No payroll records found</td>
 						<td class='text-center'>No payroll records found</td>
 						<td class='text-center'>No payroll records found</td>

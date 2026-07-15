@@ -4,16 +4,21 @@ session_start();
 error_reporting(0);
 include "dbconnect.php";
 
-$emm = $_SESSION['userid'];
-if(empty($emm)){
+$emm = $_SESSION['userid'] ?? '';
+$user_type = $_SESSION['user_type'] ?? '';
+
+if ($emm == '' || $emm == NULL) {
     echo "<script>window.open('index.php','_self')</script>";
     exit;
 }
 
 // Get user info
-$user = $conn->query("SELECT user_type, team_leader, payroll_no FROM lib_users WHERE empid='$emm'")->fetch_assoc();
-$user_type = $user['user_type'];
-$team_leader = $user['team_leader'];
+$stmt1 = $conn->prepare("SELECT user_type, empname FROM lib_users WHERE empid = ?");
+$stmt1->bind_param("s", $emm);
+$stmt1->execute();
+$row1 = $stmt1->get_result()->fetch_assoc();
+$user_type = $row1['user_type'];
+$empname   = $row1['empname'];
 $payroll_no = $user['payroll_no'];
 
 if(!in_array($user_type, ['Team Leader', 'Validator', 'GO'])){
@@ -27,7 +32,7 @@ if(!in_array($user_type, ['Team Leader', 'Validator', 'GO'])){
 <meta charset="utf-8" />
 <title>DSWD FO XI - ECT Payroll System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+<link href="css/styless.css" rel="stylesheet" />
 <link rel="icon" type="image/png" href="images/icons/dswd_icon.jpg">
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 <link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
@@ -41,10 +46,15 @@ if(!in_array($user_type, ['Team Leader', 'Validator', 'GO'])){
 <script src="assets/js/light-bootstrap-dashboard.js"></script>
 
 <style>
-body { font-size:16px; }
-.modal { z-index:1060; }
-tr.success { background-color: #dff0d8; }
-tr.danger { background-color: #f2dede; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .table{
+            background-color: #fff;
+        }
 </style>
 </head>
 <body>
@@ -102,9 +112,9 @@ tr.danger { background-color: #f2dede; }
     <div class="main-panel">
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#"><?php echo strtoupper($user_type); ?></a>
-                </div>
+                <a class="navbar-brand" href="#">
+                            <?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?= strtoupper(htmlspecialchars($user_type ?? '')) ?>
+                        </a>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout.php"><p>Log out</p></a></li>
                 </ul>
@@ -121,6 +131,7 @@ tr.danger { background-color: #f2dede; }
                             <th>DOB</th>
                             <th>Province</th>
                             <th>Municipality</th>
+                            <th>Last Served Location</th>
                             <th>Date last Served</th>
                         </tr>
                     </thead>
@@ -146,7 +157,8 @@ $(document).ready(function() {
             { data: 2 }, // DOB
             { data: 3 }, // Province
             { data: 4 },  // Municipality
-            { data: 5 }  // Municipality
+            { data: 5 },  // Date Last Served
+            { data: 6 }  // Last Served Location
         ],
         order: [[0,'asc']]
     });

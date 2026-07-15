@@ -7,7 +7,7 @@ include "dbconnect.php";
 	$date_val = date("Y-m-d");	
 	$date_yesterday = date("Y-m-d",strtotime("yesterday"));
 	$emm=$_SESSION['userid'];
-	$user_type = $_SESSION['user_type']; // get the user type from the database or session
+	$user_type = $_SESSION['user_type']; 
 	if($emm==''||$emm==NULL){
 		echo "<script>window.open('index.php','_self')</script>";
 	}else{
@@ -16,16 +16,13 @@ include "dbconnect.php";
 	$result1 = $conn->query($sql1);
 	$row1 = $result1->fetch_assoc();
 	$user_type=$row1['user_type'];
-	
+
 	$sql2 = "SELECT team_leader, payroll_no, empname FROM lib_users WHERE empid='$emm'";
 	$result2 = $conn->query($sql2);
 	$row2 = $result2->fetch_assoc();
 	$team_leader=$row2['team_leader'];
 	$payroll_no=$row2['payroll_no'];
 	$empname     = $row2['empname']; 
-	
-
-	
 ?>
 <html lang="en">
 <head>
@@ -38,76 +35,62 @@ include "dbconnect.php";
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
-
-    <!-- Bootstrap core CSS     -->
+	<link href="css/styless.css" rel="stylesheet" />
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
     <link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
-	
     <link href='css/googleapis.css' rel='stylesheet' type='text/css'>
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-	
-	  <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-	<!-- Include jQuery first -->
 	<script src="js/jquery-3.6.0.min.js"></script>
-
-	<!-- Include Bootstrap JS only once -->
 	<script src="js/bootstrap.bundle.min.js"></script>
-
-	<!-- DataTables JS -->
 	<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.min.js"></script>
-
 	<script src="js/jquery.js"></script>
 	<style>
-		body {
-		  font-size: 16px;
-		}
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
 		.modal {
-		  z-index: 1060; /* increase the z-index to be higher than the page's content */
+		  z-index: 1060; 
 		}
-		/* Custom CSS to force modal to be extra large */
 		.modal-xl {
-			max-width: 70%;  /* Adjust the width as per your requirement */
-			width: 70%;      /* Set width to 90% of the screen */
+			max-width: 70%;  
+			width: 70%;     
 		}
 		tr.success {
-			background-color: #dff0d8; /* green */
+			background-color: #dff0d8;
 		}
 
 		tr.danger {
-			background-color: #f2dede; /* red */
+			background-color: #f2dede; 
+		}
+		.navbar-brand {
+			width: auto !important;
+			text-indent: 0 !important;
+			background: none !important;
+			margin-left: 0 !important;
+			max-height: none !important;
 		}
 	</style>
 	
 </head>
 <script>
-        // Disable right-click context menu
         document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-        // Disable specific key combinations and F12
         document.addEventListener("keydown", (event) => {
             if (
-                event.shiftKey || // Disable Shift key
-                event.ctrlKey ||  // Disable Ctrl key
-                event.key === "F12" // Disable F12
+                event.shiftKey || 
+                event.ctrlKey ||  
+                event.key === "F12" 
             ) {
                 event.preventDefault();
-                //alert("This action is disabled!");
             }
         });
-
-        // Prevent Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
         document.addEventListener("keydown", (event) => {
             if (event.ctrlKey && event.shiftKey && ["I", "J", "C"].includes(event.key.toUpperCase())) {
                 event.preventDefault();
-                //alert("Developer tools shortcuts are disabled!");
             }
         });
     </script>
@@ -115,8 +98,6 @@ include "dbconnect.php";
 
 <div class="wrapper">
     <div class="sidebar" data-color="blue" data-image="assets/img/sidebar-6.jpg">
-
-    <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
 	<div class="sidebar-wrapper">
              <div class="logo">
 			
@@ -178,15 +159,11 @@ include "dbconnect.php";
 						</ul>						
 					</div>
 				</li>
-				<!-- <li>
-					<a href="https://172.31.176.49/ect/public"><i class="pe-7s-folder"></i><span><b>Liquidation</span></b> </a>
-				</li> -->
-				<?php } ?>
-			</ul>			
+		<?php } ?>
+		</ul>			
     </div>
 </div>
 		
-		<!-- Modal -->
 			<div id="payrollModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="payrollModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
@@ -202,14 +179,12 @@ include "dbconnect.php";
 					</div>
 				</div>
 			</div>
-		     <!-- TL Password Modal -->
              <div class="modal fade" id="tlPasswordModal" tabindex="-1" aria-labelledby="tlPasswordModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<form id="tlPasswordForm" method="POST" action="revert_action.php?user_id=<?php echo $emm;?>">
 					<div class="modal-content">
 						<div class="modal-header">
 						<h5 class="modal-title" id="tlPasswordModalLabel">Enter TL Password</h5>
-						<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 						</div>
 						<div class="modal-body">
 						<input type="hidden" name="bene_id" id="modalBeneId">
@@ -226,7 +201,6 @@ include "dbconnect.php";
 					</form>
 				</div>
 				</div>
-			<!-- Modal -->
 			<div id="successModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
 			  <div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -245,33 +219,32 @@ include "dbconnect.php";
 				</div>
 			  </div>
 			</div>
-    <div class="main-panel">
-		<nav class="navbar navbar-default navbar-fixed">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">
-						<?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?=  strtoupper(htmlspecialchars($user_type ?? '')) ?>
-					</a>
+<div class="main-panel">
+            <nav class="navbar navbar-default navbar-fixed" style="background-color:#fff">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">
+                            <?= strtoupper(htmlspecialchars($empname ?? '')) ?> - <?= strtoupper(htmlspecialchars($user_type ?? '')) ?>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="logout.php">
+                                    <p>Log out</p>
+                                </a>
+                            </li>
+                            <li class="separator hidden-lg hidden-md"></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="collapse navbar-collapse">
-                     <ul class="nav navbar-nav navbar-right">
-                        
-                        <li>
-                            <a href="logout.php">
-                                <p>Log out</p>
-                            </a>
-                        </li>
-						<li class="separator hidden-lg hidden-md"></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </nav>
 		<div class="content" style="width:100%">
 		<div class="mt-3"><br>
 							<div class="progress" style="height: 20px; display: none;" id="progressContainer">
@@ -307,24 +280,12 @@ include "dbconnect.php";
 </div>
 </body>
 
-
-    <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="css/dataTables.min.css">
-
-    <!-- DataTables JS -->
     <script type="text/javascript" charset="utf8" src="js/dataTables.min.js"></script>
-	
 	<script src="js/bootstrap.bundle.min.js"></script>
-	
-    <!--   Core JS Files   -->
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-
-    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
 	<script src="assets/js/light-bootstrap-dashboard.js?v=1.4.0"></script>
-
-	<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
 	<script src="assets/js/demo.js"></script>
-
 </html>
 
 
@@ -338,7 +299,7 @@ $(document).ready(function() {
         url: 'fetch_bene_payroll.php',
         type: 'POST',
         data: function(d) {
-            d.payroll_no = <?php echo json_encode($payroll_no); ?>; // Safe encoding
+            d.payroll_no = <?php echo json_encode($payroll_no); ?>; 
         }
     },
     pageLength: 10,
@@ -352,7 +313,7 @@ columns: [
                     return match.trim().toUpperCase() + '.';
                 });
             }
-            return data; // raw data unchanged for sort/filter/save
+            return data; 
         }
     },
     { title: "DOB" },

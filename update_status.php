@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'dbconnect.php';  // Include your database connection file
+ignore_user_abort(true); // Let the script finish even if the client disconnects
 $emm = $_SESSION['userid'];
 date_default_timezone_set('Asia/Manila');
 $date_val = date("Y-m-d H:i:s");
@@ -20,7 +21,7 @@ if (
     $sdo_limit = 1000000;
 
     // Step 1: Fetch beneficiary details
-    $sql_bene = "SELECT city_municipality, payroll_date, team_leader, sdo_id, payroll_no FROM ect_clean_list WHERE id = ?";
+    $sql_bene = "SELECT city_municipality, payroll_date, team_leader, sdo_id, payroll_no, status, payroll_id FROM ect_clean_list WHERE id = ?";
     $stmt_bene = $conn->prepare($sql_bene);
     $stmt_bene->bind_param('i', $bene_id);
     $stmt_bene->execute();
@@ -28,6 +29,12 @@ if (
 
     if ($result_bene->num_rows > 0) {
         $payroll = $result_bene->fetch_assoc();
+        if ($payroll['status'] === $status && !empty($payroll['payroll_id'])) {
+            echo $payroll['payroll_id'];
+            $conn->close();
+            exit;
+        }
+
         $city_municipality = $payroll['city_municipality'];
         $payroll_date = $payroll['payroll_date'];
         $team_leader = $payroll['team_leader'];
@@ -47,7 +54,7 @@ if (
                 $max_payroll_no = ($row_max = $result_max->fetch_assoc()) ? $row_max['max_payroll_no'] ?? 0 : 0;
 
                 // Use MAX(payroll_id) instead of COUNT to avoid duplicates
-                $sql_max_id = "SELECT MAX(payroll_id) AS max_id FROM ect_clean_list WHERE payroll_no = ?";
+                $sql_max_id = "SELECT MAX(payroll_id) AS max_id FROM ect_clean_list WHERE payroll_no = ? FOR UPDATE";
                 $stmt_max = $conn->prepare($sql_max_id);
                 $stmt_max->bind_param('i', $payroll_no);
                 $stmt_max->execute();

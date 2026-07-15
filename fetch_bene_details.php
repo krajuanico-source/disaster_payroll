@@ -62,9 +62,10 @@ if (isset($_POST['bene_id'])) {
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Sex:</label>
+                        <?php $bene_sex = strtoupper(trim($bene['sex'] ?? '')); ?>
                         <select id="sex" class="form-control" required>
-                            <option value="<?php echo $bene['sex']; ?>">
-                                <?php echo strtoupper($bene['sex']); ?>
+                            <option value="<?php echo $bene['bene_sex']; ?>">
+                                <?php echo strtoupper($bene['bene_sex']); ?>
                             </option>
                             <option value="MALE">MALE</option>
                             <option value="FEMALE">FEMALE</option>
@@ -673,7 +674,7 @@ if (isset($_POST['bene_id'])) {
 
                             setTimeout(function() {
                                 location.reload();
-                            }, 5000);
+                            }, 2000);
                         },
                         error: function() {
                             isSubmitting = false;

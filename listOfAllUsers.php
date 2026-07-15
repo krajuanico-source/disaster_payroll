@@ -38,35 +38,25 @@ error_reporting(0);
 
 	<title>DSWD FO XI - ECT Payroll System</title>
 
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="images/icons/dswd_icon.jpg">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>DSWD FO XI - ECT Payroll System</title>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width" />
 
+	<link href="css/styless.css" rel="stylesheet" />
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/css/animate.min.css" rel="stylesheet"/>
+	<link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+	<link href='css/googleapis.css' rel='stylesheet' type='text/css'>
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="css/dataTables.min.css">
 
-    <!-- Bootstrap core CSS     -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Animation library for notifications   -->
-    <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
-    <link href="assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
-	
-    <link href='css/googleapis.css' rel='stylesheet' type='text/css'>
-    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-	
-	  <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-	<!-- Include jQuery first -->
-	<script src="jquery-3.6.0.min.js"></script>
-
-	<!-- Include Bootstrap JS only once -->
+	<script src="js/jquery-3.6.0.min.js"></script>
 	<script src="js/bootstrap.bundle.min.js"></script>
-
-	<!-- DataTables JS -->
 	<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.min.js"></script>
-
-	<script src="js/jquery.js"></script>
+	<script type="text/javascript" charset="utf8" src="js/dataTables.min.js"></script>
 	<style>
 		body {
 		  font-size: 16px;
@@ -203,7 +193,7 @@ error_reporting(0);
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary-close" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary update-status-btn">Assign User</button>
             </div>
         </div>
