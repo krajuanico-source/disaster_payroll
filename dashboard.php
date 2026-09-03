@@ -78,7 +78,6 @@ $disqualfied = getCount($conn, $payroll_no, 'Disqualified');
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 16px;
             background: #f4f6f8;
             margin: 0;
             padding: 20px;

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+session_start();
 require_once "dbconnect.php";
 
 // -------------------------
@@ -23,7 +24,7 @@ try {
     $length = intval($_POST['length'] ?? 10);
     $search = trim($_POST['search']['value'] ?? '');
 
-    // 2. SEARCH FILTER
+    // 2. SEARCH FILTER (deleted rows no longer live in this table, so no is_deleted filter needed)
     $where = "";
     $params = [];
     $paramTypes = '';
@@ -43,7 +44,7 @@ try {
         }
         $where = "WHERE " . implode(" AND ", $conditions);
     }
-    
+
     // 3. TOTAL RECORD COUNT
     $totalQuery = "SELECT COUNT(*) AS total FROM ect_served_database";
     $totalResult = $conn->query($totalQuery);
@@ -62,14 +63,14 @@ try {
         $filteredRecords = $totalRecords;
     }
 
-    // 5. FETCH PAGINATED DATA
+    // 6. FETCH PAGINATED DATA
     $dataSql = "
         SELECT 
             id,
             CONCAT_WS(' ', first_name, middle_name, last_name, IFNULL(extension_name, '')) AS fullname,
             CONCAT(LPAD(birth_month,2,'0'), '-', LPAD(birth_day,2,'0'), '-', birth_year) AS dob,
             province,
-            city_municipality,last_served_location,date_last_served
+            city_municipality, last_served_location, date_last_served
         FROM ect_served_database
         $where
         ORDER BY id ASC
@@ -78,25 +79,21 @@ try {
 
     $dataStmt = $conn->prepare($dataSql);
 
-    // Bind parameters
-    if ($where !== '') {
-        $paramTypes .= "ii";
-        $params[] = $start;
-        $params[] = $length;
-        $dataStmt->bind_param($paramTypes, ...$params);
-    } else {
-        $dataStmt->bind_param("ii", $start, $length);
-    }
+    // Bind parameters (search params + pagination)
+    $bindTypes = $paramTypes . "ii";
+    $bindParams = array_merge($params, [$start, $length]);
+    $dataStmt->bind_param($bindTypes, ...$bindParams);
 
     $dataStmt->execute();
     $result = $dataStmt->get_result();
 
-    // 6. BUILD DATA ARRAY
+    // 7. BUILD DATA ARRAY
     $data = [];
     $ctr = $start + 1;
+    $canDelete = in_array($_SESSION['user_type'] ?? '', ['Team Leader'], true);
 
     while ($row = $result->fetch_assoc()) {
-        $data[] = [
+        $rowData = [
             $ctr++,
             strtoupper($row['fullname']),
             $row['dob'],
@@ -105,12 +102,19 @@ try {
             htmlspecialchars($row['last_served_location']),
             $row['date_last_served']
         ];
+
+        if ($canDelete) {
+            $id = (int)$row['id'];
+            $rowData[] = '<input type="checkbox" class="row-select-served" value="' . $id . '">';
+        }
+
+        $data[] = $rowData;
     }
 
     $dataStmt->close();
     $conn->close();
 
-    // 7. BUILD JSON RESPONSE
+    // 8. BUILD JSON RESPONSE
     $response = [
         "draw" => $draw,
         "recordsTotal" => $totalRecords,

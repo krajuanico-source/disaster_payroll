@@ -2,7 +2,7 @@
 // Database connection parameters
 $hostname = 'localhost';
 $username = 'root';
-$password = 'root';
+$password = 'password';
 $databaseName = 'disaster_db';
 $tableName = 'tbl_bene';
 

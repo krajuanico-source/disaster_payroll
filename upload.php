@@ -1,14 +1,49 @@
 <?php
 
+// Prevent any stray PHP notices/warnings/deprecations from leaking into the
+// plain-text response the JS is doing strict === checks against.
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+ob_start();
+
 include "dbconnect.php";
+
+// Normalize a header cell for comparison: trim, collapse inner whitespace, uppercase.
+function normalizeHeader($value)
+{
+    $value = trim((string)$value);
+    $value = preg_replace('/\s+/', ' ', $value);
+    return strtoupper($value);
+}
+
+// Fix mixed/garbled encoding on name & location fields without relying on
+// the deprecated "auto" detection mode (removed in PHP 8.3+).
+function fixEncoding($value)
+{
+    $value = str_replace(['Ã', 'Ã±'], 'Ñ', (string)$value);
+    if (!mb_check_encoding($value, 'UTF-8')) {
+        $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+    }
+    return $value;
+}
+
+// Clears any buffered stray output, then emits the exact response string
+// the frontend is expecting, and stops execution.
+function respond($message)
+{
+    if (ob_get_length() !== false) {
+        ob_end_clean();
+    }
+    echo $message;
+    exit;
+}
 
 if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     $fileTmpPath = $_FILES['csvFile']['tmp_name'];
     $fileName    = $_FILES['csvFile']['name'];
 
     if (!preg_match('/\.csv$/i', $fileName)) {
-        echo "invalid_file_type";
-        exit;
+        respond("invalid_file_type");
     }
 
     $checkQuery = "SELECT * FROM tbl_import_log WHERE file_name = ?";
@@ -18,18 +53,16 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "file_exists";
         $stmt->close();
         $conn->close();
-        exit;
+        respond("file_exists");
     }
 
     $handle = fopen($fileTmpPath, "r");
     if ($handle === FALSE) {
-        echo "Error opening file.";
         $stmt->close();
         $conn->close();
-        exit;
+        respond("Error opening file.");
     }
 
     // The exact headers expected, in the exact order they must appear.
@@ -58,31 +91,21 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     ];
     $EXPECTED_COLUMN_COUNT = count($EXPECTED_HEADERS); // 19
 
-    // Normalize a header cell for comparison: trim, collapse inner whitespace, uppercase.
-    function normalizeHeader($value)
-    {
-        $value = trim((string)$value);
-        $value = preg_replace('/\s+/', ' ', $value);
-        return strtoupper($value);
-    }
-
     $header = fgetcsv($handle);
 
     if ($header === FALSE || count(array_filter($header, fn($v) => trim((string)$v) !== '')) === 0) {
         fclose($handle);
-        echo "invalid_format";
         $stmt->close();
         $conn->close();
-        exit;
+        respond("invalid_format");
     }
 
     // Must have exactly the expected number of columns.
     if (count($header) !== $EXPECTED_COLUMN_COUNT) {
         fclose($handle);
-        echo "invalid_format";
         $stmt->close();
         $conn->close();
-        exit;
+        respond("invalid_format");
     }
 
     // Must match the expected header names, in the expected order.
@@ -91,10 +114,9 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     foreach ($EXPECTED_HEADERS as $index => $expected) {
         if (!isset($normalizedHeader[$index]) || $normalizedHeader[$index] !== $expected) {
             fclose($handle);
-            echo "invalid_format";
             $stmt->close();
             $conn->close();
-            exit;
+            respond("invalid_format");
         }
     }
 
@@ -124,10 +146,9 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
     fclose($handle);
 
     if (!$formatValid || empty($rows)) {
-        echo "invalid_format";
         $stmt->close();
         $conn->close();
-        exit;
+        respond("invalid_format");
     }
 
     $conn->begin_transaction();
@@ -188,11 +209,11 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
             $col17 = isset($data[17]) ? $conn->real_escape_string(trim($data[17])) : NULL; // sdo (= "SDO INCHARGE" combined value)
             $col18 = isset($data[18]) ? $conn->real_escape_string(trim($data[18])) : NULL; // other (= "OTHER REMARKS" combined value)
 
-            // Fix encoding for name fields and location
-            $lastName  = mb_convert_encoding(str_replace(['Ã', 'Ã±'], 'Ñ', $col1),  "UTF-8", "auto");
-            $firstName = mb_convert_encoding(str_replace(['Ã', 'Ã±'], 'Ñ', $col2),  "UTF-8", "auto");
-            $midName   = mb_convert_encoding(str_replace(['Ã', 'Ã±'], 'Ñ', $col3),  "UTF-8", "auto");
-            $loc       = mb_convert_encoding(str_replace(['Ã', 'Ã±'], 'Ñ', $col14), "UTF-8", "auto");
+            // Fix encoding for name fields and location (no more deprecated "auto" mode)
+            $lastName  = fixEncoding($col1);
+            $firstName = fixEncoding($col2);
+            $midName   = fixEncoding($col3);
+            $loc       = fixEncoding($col14);
 
             $sql = "INSERT INTO ect_served_database
                         (control_number, last_name, first_name, middle_name, extension_name,
@@ -229,16 +250,15 @@ if (isset($_FILES['csvFile']) && $_FILES['csvFile']['error'] == 0) {
         $logStmt->close();
 
         $conn->commit();
-        echo "success";
+        $stmt->close();
+        $conn->close();
+        respond("success");
     } catch (Exception $e) {
         $conn->rollback();
-        echo "Error importing data.";
+        $stmt->close();
+        $conn->close();
+        respond("Error importing data.");
     }
-
-    $stmt->close();
 } else {
-    echo "Error uploading file.";
+    respond("Error uploading file.");
 }
-
-$conn->close();
-?>
