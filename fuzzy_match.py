@@ -39,7 +39,7 @@ poo = '' #sys.argv[5]
 conn = mysql.connector.connect(
     host="127.0.0.1",
     user="root",
-    password="",
+    password="uplift_server",
     database="disaster_db"
 )
 
@@ -173,7 +173,7 @@ db_df[cols_to_convert] = db_df[cols_to_convert].astype(int)
 db_df[cols_to_convert] = db_df[cols_to_convert].astype(str).map(lambda x: x.zfill(2))
 db_df['Birthday'] = db_df['birth_day'] + ' ' + db_df['birth_month'] + ' ' + db_df['birth_year']
 
-# columns_to_retain = ["FIRST NAME", "MIDDLE NAME", "LAST NAME", "EXTENSION NAME", "BIRTH DAY", "BIRTH MONTH", "BIRTH YEAR", "SEX", "GCASH", "PCN", "PROVINCE", "CITY/MUNICIPALITY", "BARANGAY", "PUROK", "AMOUNT"]
+# columns_to_retain = ["FIRST NAME", "MIDDLE NAME", "LAST NAME", "EXTENSION NAME", "BIRTH DAY", "BIRTH MONTH", "BIRTH YEAR", "PROVINCE", "CITY/MUNICIPALITY", "BARANGAY", "PUROK", "AMOUNT"]
 
 master_list = pd.DataFrame()
 valid_recs = pd.DataFrame()
@@ -189,14 +189,14 @@ column_mapping = {
     'BIRTH DAY': 'birth_day',
     'BIRTH MONTH': 'birth_month',
     'BIRTH YEAR': 'birth_year',
+    'SEX': 'bene_sex',
+    'GCASH': 'gcash',
+    'PCN': 'pcn',
     'PROVINCE': 'province',
     'CITY/MUNICIPALITY': 'city_municipality',
     'BARANGAY': 'barangay',
     'PUROK': 'purok',
     'AMOUNT': 'amount',
-    'SEX': 'sex',
-    'GCASH': 'gcash',
-    'PCN': 'pcn',
     'File Source': 'file_source'
     # Add more mappings as needed
 }
@@ -302,7 +302,9 @@ def generate_random_code(existing_codes, province):
 df = pd.read_csv(file_name, dtype={
     'BIRTH DAY': pd.Int64Dtype(),
     'BIRTH MONTH': pd.Int64Dtype(),
-    'BIRTH YEAR': pd.Int64Dtype()
+    'BIRTH YEAR': pd.Int64Dtype(),
+    'GCASH': str,
+    'PCN': str
     }, encoding="UTF-8")
 
 # df = df.fillna('')
